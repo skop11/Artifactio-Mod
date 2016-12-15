@@ -1,0 +1,16 @@
+[
+{
+  "modid": "portalstone",
+  "name": "PortalStone Mod",
+  "description": "A more lore-friendly Hearthstone mod for Minecraft 1.10.2.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["skop11"],
+  "credits": "The Forge and FML guys",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
