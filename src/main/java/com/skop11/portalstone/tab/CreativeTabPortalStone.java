@@ -1,5 +1,6 @@
 package com.skop11.portalstone.tab;
 
+import com.skop11.portalstone.item.PortalStoneItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -17,6 +18,6 @@ public class CreativeTabPortalStone extends CreativeTabs
     @Override
     public Item getTabIconItem()
     {
-        return Items.ENDER_PEARL;
+        return PortalStoneItems.portalStone;
     }
 }

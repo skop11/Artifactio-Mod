@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "portalstone:items/portalstone_item"
+    "layer0": "portalstone:items/portalstone_0"
   }
 }
