@@ -4,4 +4,6 @@
 itemGroup.tab_portalstone=PortalStone
 
 # Items
-item.portalstone.name=PortalStone
+item.portalstone.active.name=PortalStone
+item.portalstone.uncharged.name=PortalStone
+item.inactpstone.name=Inactive PortalStone

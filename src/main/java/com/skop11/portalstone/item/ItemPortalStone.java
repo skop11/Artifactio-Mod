@@ -1,9 +1,11 @@
 package com.skop11.portalstone.item;
 
 import com.skop11.portalstone.PortalStoneMod;
+import com.skop11.portalstone.item.ItemDamageHandler.PortalStoneTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleSmokeNormal;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,30 +17,47 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.List;
 
-/**
- * Created by David on 15/12/2016.
- */
 public class ItemPortalStone extends Item
 {
 
     private static final int MAX_ITEM_USE = 100;
 
+    private static final long DEFAULT_COOLDOWN = 1800000;
+    private static final long INTERDIM_COOLDOWN = 2 * DEFAULT_COOLDOWN;
+
+    @SuppressWarnings("all")
     public ItemPortalStone(String name)
     {
         setUnlocalizedName(name);
         setHasSubtypes(true);
-        setMaxDamage(1);
         setCreativeTab(PortalStoneMod.tabPortalStone);
+        setMaxStackSize(1);
+    }
 
+    @Override @Nonnull
+    public String getUnlocalizedName(ItemStack stack)
+    {
+        return this.getUnlocalizedName() + "." + PortalStoneTypes.values()[stack.getItemDamage()].getName();
     }
 
     @Override
+    public int getMetadata(int damage)
+    {
+        return damage;
+    }
+
+    /*@SideOnly(Side.CLIENT)*/ @Override
+    public void getSubItems(@Nonnull Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+    {
+        subItems.add(new ItemStack(itemIn, 1, 0));
+    }
+
+    @Override @Nonnull
     public EnumAction getItemUseAction(ItemStack stack)
     {
         return EnumAction.BOW;
@@ -50,11 +69,13 @@ public class ItemPortalStone extends Item
         return MAX_ITEM_USE;
     }
 
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+    @Override @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
+        if (itemStackIn.getItemDamage() != 0) return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStackIn);
         NBTTagCompound nbtTagCompound = itemStackIn.getTagCompound();
         boolean sneaking = playerIn.isSneaking();
+
         if (!worldIn.isRemote)
         {
             if (sneaking)
@@ -74,29 +95,24 @@ public class ItemPortalStone extends Item
                 return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
 
             }
-            else
-            {
-            }
         }
         else
         {
-            //if (!sneaking) playerIn.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F,1.0F);
+            // TODO: MAKE SOME KIND OF SOUND HERE
         }
 
         playerIn.setActiveHand(hand);
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
     }
 
-    @Nullable
-    @Override
-    public ItemStack onItemUseFinish(ItemStack itemStackIn, World worldIn, EntityLivingBase entityLiving)
+
+    @Override @Nonnull
+    public ItemStack onItemUseFinish(@Nonnull ItemStack itemStackIn, World worldIn, EntityLivingBase entityLiving)
     {
-        NBTTagCompound nbtTagCompound = itemStackIn.getTagCompound();
-        if (!worldIn.isRemote && nbtTagCompound != null)
+        if (itemStackIn.getItemDamage() == 0)
         {
-            long time = worldIn.getWorldTime();
-            long cooldown = nbtTagCompound.getLong("Cooldown");
-            if (time  >= cooldown)
+            NBTTagCompound nbtTagCompound = itemStackIn.getTagCompound();
+            if (!worldIn.isRemote && nbtTagCompound != null)
             {
                 if (entityLiving instanceof EntityPlayerMP)
                 {
@@ -106,16 +122,16 @@ public class ItemPortalStone extends Item
                     int y = nbtTagCompound.getInteger("YCoord");
                     int z = nbtTagCompound.getInteger("ZCoord");
                     if (dim != ((EntityPlayerMP) entityLiving).dimension)
+                    {
+                        nbtTagCompound.setLong("Cooldown", Minecraft.getSystemTime() + INTERDIM_COOLDOWN);
                         entityLiving.changeDimension(dim);
+                    }
+                    else nbtTagCompound.setLong("Cooldown", Minecraft.getSystemTime() + DEFAULT_COOLDOWN);
                     entityPlayerMP.connection.setPlayerLocation(x, y, z, entityPlayerMP.rotationYaw,
                             entityPlayerMP.rotationPitch);
-                    entityPlayerMP.addChatComponentMessage(new TextComponentString("Time set to 30 min"));
+                    itemStackIn.setItemDamage(1);
                 }
-                nbtTagCompound.setLong("Cooldown", worldIn.getWorldTime() + 36000);
-
-
             }
-                //((EntityPlayerMP) entityLiving).addChatComponentMessage(new TextComponentString((cooldown - time) / 20 + " seconds"));
         }
         return itemStackIn;
     }
@@ -123,50 +139,75 @@ public class ItemPortalStone extends Item
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
-        tooltip.add("Item Tooltip");
-
         super.addInformation(stack, playerIn, tooltip, advanced);
+        NBTTagCompound nbtTagCompound = stack.getTagCompound();
+        if (nbtTagCompound != null)
+        {
+            int time = timeRemaining(stack);
+            if (time > 0)
+            {
+                int secs = (int) (time * 0.001f) + 1;
+                int mins = secs / 60;
+                secs %= 60;
+                tooltip.add("Time remaining: " + String.format("%02d", mins) + ":" + String.format("%02d", secs));
+            }
+            else tooltip.add("Ready for use");
+        }
+        else tooltip.add("Not bound to any position");
+
     }
 
     @Override
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
     {
         super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
+        if (stack.getItemDamage() == 1 && stack.getTagCompound() != null)
+        {
+            if (timeRemaining(stack) == 0) stack.setItemDamage(0);
+
+        }
+
     }
 
     @Override
     public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
     {
-        if (player.worldObj.isRemote)
+        if (player.worldObj.isRemote && stack.getTagCompound() != null)
         {
-            int clamp = 10;
-            int npart = (MAX_ITEM_USE - count) / (clamp >> 1);
-            Particle particle;
-
-            ParticleSmokeNormal.Factory factory = new ParticleSmokeNormal.Factory();
-
-            for (int i = 0; i < Math.min(npart, clamp); i++)
+            if (timeRemaining(stack) == 0)
             {
-                particle = factory.createParticle(0, player.worldObj, player.posX + Math.random() * 1.8 - 0.9, player.posY + Math.random() * 1.8f, player.posZ + Math.random() * 1.8 - 0.9, 0, 0, 0);
-                particle.setRBGColorF(0.47f + (((float)Math.random() - 0.5f) * 0.25f), 0.1961f, 0.62745f);
-                Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+                int npart = (int) ((((float) (MAX_ITEM_USE - count)) / (float)MAX_ITEM_USE) * 20);
+                int clamp = (int) (npart * 0.5);
+                float range = 3f, offset = range * 0.5f;
+                Particle particle;
+                //System.out.println(npart + " " + (((float) (MAX_ITEM_USE - count)) / (float)MAX_ITEM_USE));
+                ParticleSmokeNormal.Factory factory = new ParticleSmokeNormal.Factory();
+
+                for (int i = 0; i < Math.min(npart, clamp); i++)
+                {
+                    particle = factory.createParticle(0, player.worldObj,
+                            player.posX + Math.random() * range - offset,
+                            player.posY + Math.random() * range,
+                            player.posZ + Math.random() * range - offset,
+                            0, 0.05f, 0);
+                    particle.setRBGColorF(0.47f + (((float) Math.random() - 0.5f) * 0.25f), 0.1961f, 0.62745f);
+                    Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+                }
             }
 
         }
-
-        //super.onUsingTick(stack, player, count);
     }
 
-    /*@Override
-    public EnumRarity getRarity(ItemStack stack)
+    private static int timeRemaining(ItemStack itemStackIn)
     {
-        return EnumRarity.UNCOMMON;
-    }*/
+        @SuppressWarnings("ConstantConditions")
+        long cooldown = itemStackIn.getTagCompound().getLong("Cooldown");
 
-    public boolean hasEffect(ItemStack stack)
-    {
-        return false;
-        //return !(stack.getTagCompound() == null);
+        long time = Minecraft.getSystemTime();
+
+        int r = (int) (cooldown - time);
+
+        return r > 0 ? r : 0;
     }
 
 }
