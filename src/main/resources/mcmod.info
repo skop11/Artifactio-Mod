@@ -3,7 +3,7 @@
   "modid": "portalstone",
   "name": "PortalStone Mod",
   "description": "A more lore-friendly Hearthstone mod for Minecraft.",
-  "version": "${version}",
+  "version": "1.0.0",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
