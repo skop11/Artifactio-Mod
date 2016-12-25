@@ -1,7 +1,7 @@
-# English US Language file for PortalStone Mod
+# English US Language file for Artifactio Mod
 
 # Creative Tab
-itemGroup.tab_portalstone=PortalStone
+itemGroup.tab_portalstone=Artifactio!
 
 # Items
 item.portalstone.active.name=PortalStone

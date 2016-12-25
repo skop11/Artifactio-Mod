@@ -1,9 +1,0 @@
-# English US Language file for PortalStone Mod
-
-# Creative Tab
-itemGroup.tab_portalstone=PortalStone
-
-# Items
-item.portalstone.active.name=PortalStone
-item.portalstone.uncharged.name=PortalStone
-item.inactpstone.name=Inactive PortalStone
