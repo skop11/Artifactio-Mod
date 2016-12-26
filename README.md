@@ -1,2 +1,2 @@
-# PortalStone-Mod
-A more lore-friendly Hearthstone mod for Minecraft 1.10.2
+# Artifactio!
+Minecraft mod for version 1.10.2 that adds useful gadgets with a magic theme.
