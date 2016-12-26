@@ -2,6 +2,7 @@ package com.skop11.artifactio.item;
 
 import com.skop11.artifactio.ArtifactioMod;
 import com.skop11.artifactio.item.ItemDamageHandler.PortalStoneTypes;
+import com.skop11.artifactio.utils.PlayerTelport;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
@@ -97,25 +98,26 @@ public class ItemPortalStone extends Item
     {
 
         Block block = worldIn.getBlockState(pos).getBlock();
-        if (block == Blocks.DRAGON_EGG)
+        if (playerIn.isSneaking())
         {
-            //stack.getTagCompound().setBoolean("EndTravel", true);
-            //worldIn.playSound(playerIn, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT, 1f, 1f);
-        }
-        else if (block == Blocks.BED)
-        {
-            if (playerIn.dimension != 1 || stack.getTagCompound().getBoolean("EndTravel"))
+            if (block == Blocks.DRAGON_EGG)
             {
-                NBTTagCompound nbtTagCompound = stack.getTagCompound();
-                nbtTagCompound.setInteger("Dim", playerIn.dimension);
-                nbtTagCompound.setInteger("XCoord", playerIn.getPosition().getX());
-                nbtTagCompound.setInteger("YCoord", playerIn.getPosition().getY());
-                nbtTagCompound.setInteger("ZCoord", playerIn.getPosition().getZ());
-                nbtTagCompound.setBoolean("Bound", true);
+                stack.getTagCompound().setBoolean("EndTravel", true);
                 worldIn.playSound(playerIn, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT, 1f, 1f);
+            } else
+            {
+                if (playerIn.dimension != 1 || stack.getTagCompound().getBoolean("EndTravel"))
+                {
+                    NBTTagCompound nbtTagCompound = stack.getTagCompound();
+                    nbtTagCompound.setInteger("Dim", playerIn.dimension);
+                    nbtTagCompound.setInteger("XCoord", pos.getX());
+                    nbtTagCompound.setInteger("YCoord", pos.getY() + 1);
+                    nbtTagCompound.setInteger("ZCoord", pos.getZ());
+                    nbtTagCompound.setBoolean("Bound", true);
+                    worldIn.playSound(playerIn, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT, 1f, 1f);
+                }
             }
         }
-
 
         return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
     }
@@ -140,14 +142,15 @@ public class ItemPortalStone extends Item
                     if (dim != ((EntityPlayerMP) entityLiving).dimension)
                     {
                         nbtTagCompound.setLong("Cooldown", Minecraft.getSystemTime() + INTERDIM_COOLDOWN);
-                        entityLiving.changeDimension(dim);
-
-
+                        PlayerTelport.teleportToDim(entityPlayerMP, dim, x, y, z);
 
                     }
-                    else nbtTagCompound.setLong("Cooldown", Minecraft.getSystemTime() + DEFAULT_COOLDOWN);
-                    entityPlayerMP.connection.setPlayerLocation(x, y, z, entityPlayerMP.rotationYaw,
-                            entityPlayerMP.rotationPitch);
+                    else
+                    {
+                        nbtTagCompound.setLong("Cooldown", Minecraft.getSystemTime() + DEFAULT_COOLDOWN);
+                        entityPlayerMP.connection.setPlayerLocation(x, y, z, entityPlayerMP.rotationYaw,
+                                entityPlayerMP.rotationPitch);
+                    }
                     itemStackIn.setItemDamage(1);
                 }
             }
@@ -177,9 +180,7 @@ public class ItemPortalStone extends Item
             else
             {
                 if (playerIn.dimension == 1 && !nbtTagCompound.getBoolean("EndTravel"))
-                {
                     tooltip.add("Cannot teleport from The End");
-                }
                 else tooltip.add("Ready to teleport");
             }
         }

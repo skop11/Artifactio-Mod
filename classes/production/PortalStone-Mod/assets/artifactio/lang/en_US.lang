@@ -1,0 +1,13 @@
+# English US Language file for Artifactio Mod
+
+# Creative Tab
+itemGroup.tab_portalstone=Artifactio!
+
+# Items
+item.portalstone.active.name=PortalStone
+item.portalstone.uncharged.name=PortalStone
+item.inactpstone.name=Inactive PortalStone
+item.tool_compendium.name=Tool Compendium
+
+# GUI
+container.tool_compendium.name=Tool Compendium

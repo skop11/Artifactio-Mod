@@ -1,9 +1,9 @@
 [
 {
-  "modid": "portalstone",
-  "name": "PortalStone Mod",
-  "description": "A more lore-friendly Hearthstone mod for Minecraft.",
-  "version": "1.0.1",
+  "modid": "artifactio",
+  "name": "Artifactio!",
+  "description": "Useful gadgets with a magic theme.",
+  "version": "1.1.0",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
