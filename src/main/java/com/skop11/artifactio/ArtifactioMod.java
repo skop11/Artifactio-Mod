@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 public class ArtifactioMod
 {
     public static final String MODID = "artifactio";
-    public static final String VERSION = "1.1.0";
+    public static final String VERSION = "1.1.2";
     public static final String NAME = "Artifactio!";
 
     @SidedProxy(clientSide = "com.skop11.artifactio.proxy.ClientProxy", serverSide = "com.skop11.artifactio.proxy.CommonProxy")
