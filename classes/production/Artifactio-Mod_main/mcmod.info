@@ -1,0 +1,16 @@
+[
+{
+  "modid": "artifactio",
+  "name": "Artifactio!",
+  "description": "Useful gadgets with a magic theme.",
+  "version": "1.1.1",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["skop11"],
+  "credits": "The Forge and FML guys",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

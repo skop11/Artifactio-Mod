@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleSmokeNormal;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -148,7 +149,7 @@ public class ItemPortalStone extends Item
                     else
                     {
                         nbtTagCompound.setLong("Cooldown", Minecraft.getSystemTime() + DEFAULT_COOLDOWN);
-                        entityPlayerMP.connection.setPlayerLocation(x, y, z, entityPlayerMP.rotationYaw,
+                        entityPlayerMP.connection.setPlayerLocation(x + 0.5f, y, z + 0.5f, entityPlayerMP.rotationYaw,
                                 entityPlayerMP.rotationPitch);
                     }
                     itemStackIn.setItemDamage(1);
@@ -175,19 +176,18 @@ public class ItemPortalStone extends Item
                 int secs = (int) (time * 0.001f) + 1;
                 int mins = secs / 60;
                 secs %= 60;
-                tooltip.add("Time remaining: " + String.format("%02d", mins) + ":" + String.format("%02d", secs));
+                tooltip.add(I18n.format("item.portalstone.active.tooltip.time") + " " + String.format("%02d", mins) + ":" + String.format("%02d", secs));
             }
             else
             {
                 if (playerIn.dimension == 1 && !nbtTagCompound.getBoolean("EndTravel"))
-                    tooltip.add("Cannot teleport from The End");
-                else tooltip.add("Ready to teleport");
+                    tooltip.add(I18n.format("item.portalstone.active.tooltip.end"));
+                else tooltip.add(I18n.format("item.portalstone.active.tooltip.ready"));
             }
         }
         else
         {
-            tooltip.add("Not bound to any position");
-            tooltip.add("(Shift + Right click on a Bed)");
+            tooltip.add(I18n.format("item.portalstone.active.tooltip.bind"));
         }
 
     }
@@ -215,7 +215,6 @@ public class ItemPortalStone extends Item
                 int clamp = (int) (npart * 0.5);
                 float range = 3f, offset = range * 0.5f;
                 Particle particle;
-                //System.out.println(npart + " " + (((float) (MAX_ITEM_USE - count)) / (float)MAX_ITEM_USE));
                 ParticleSmokeNormal.Factory factory = new ParticleSmokeNormal.Factory();
 
                 for (int i = 0; i < Math.min(npart, clamp); i++)
@@ -238,6 +237,8 @@ public class ItemPortalStone extends Item
     {
         return stack.getTagCompound().getBoolean("EndTravel");
     }*/
+
+
 
     public static ItemStack init(ItemStack itemStackIn)
     {

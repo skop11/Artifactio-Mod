@@ -15,8 +15,8 @@ public class PlayerTelport
         player.addExperienceLevel(0);
 
         worldServer.getMinecraftServer().getPlayerList().transferPlayerToDimension(
-                player, dim, new PortalStoneTeleporter(worldServer, x, y, z));
-        player.setPositionAndUpdate(x, y, z);
+                player, dim, new PortalStoneTeleporter(worldServer, x + 0.5f, y, z + 0.5f));
+        player.setPositionAndUpdate(x + 0.5f, y, z + 0.5f);
         if (curDim == 1)
         {
             worldServer.spawnEntityInWorld(player);
