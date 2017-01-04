@@ -232,6 +232,8 @@ public class ItemPortalStone extends Item
         }
     }
 
+
+
     /*@Override
     public boolean hasEffect(ItemStack stack)
     {

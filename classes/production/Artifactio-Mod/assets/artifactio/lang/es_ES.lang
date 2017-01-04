@@ -1,0 +1,19 @@
+# Spanish ES Language file for the Artifactio Mod
+
+# Creative Tab
+itemGroup.tab_artifactio=Artifactio!
+
+# Items
+item.portalstone.active.name=Piedra Portal
+item.portalstone.uncharged.name=Piedra Portal
+item.inactpstone.name=Piedra Portal (Inactiva)
+item.tool_compendium.name=Compendio de herramientas
+
+# GUI
+container.tool_compendium.name=Compendio de herramientas
+
+# Text
+item.portalstone.active.tooltip.bind=No enlazada a ninguna posición
+item.portalstone.active.tooltip.ready=Lista para el teletransporte
+item.portalstone.active.tooltip.end=No se puede teletransportar desde El End
+item.portalstone.active.tooltip.time=Tiempo restante:

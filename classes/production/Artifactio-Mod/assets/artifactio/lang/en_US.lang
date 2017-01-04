@@ -1,4 +1,4 @@
-# English US Language file for Artifactio Mod
+# English US Language file for the Artifactio Mod
 
 # Creative Tab
 itemGroup.tab_artifactio=Artifactio!
@@ -8,6 +8,8 @@ item.portalstone.active.name=PortalStone
 item.portalstone.uncharged.name=PortalStone
 item.inactpstone.name=Inactive PortalStone
 item.tool_compendium.name=Tool Compendium
+item.coating.name=Item Coating
+item.redflower_solar.name=RedFlower
 
 # GUI
 container.tool_compendium.name=Tool Compendium
@@ -17,3 +19,5 @@ item.portalstone.active.tooltip.bind=Not bound to any position
 item.portalstone.active.tooltip.ready=Ready to teleport
 item.portalstone.active.tooltip.end=Cannot teleport from The End
 item.portalstone.active.tooltip.time=Time remaining:
+text.coating.shielded.display=Shielded
+item.redflower_solar.tooltip.energy=Energy:

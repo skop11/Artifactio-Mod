@@ -1,10 +1,11 @@
 package com.skop11.artifactio;
 
 import com.skop11.artifactio.entity.ArtifactioEntityRegister;
+import com.skop11.artifactio.event.CommonEvents;
 import com.skop11.artifactio.gui.GUIHandler;
 import com.skop11.artifactio.item.ArtifactioItems;
 import com.skop11.artifactio.proxy.CommonProxy;
-import com.skop11.artifactio.recipes.ArtifactioCraftingRecipes;
+import com.skop11.artifactio.recipes.ArtifactioRecipes;
 import com.skop11.artifactio.tab.CreativeTabArtifactio;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.common.Mod;
@@ -47,7 +48,7 @@ public class ArtifactioMod
     @EventHandler @SuppressWarnings("unused")
     public void init(FMLInitializationEvent event)
     {
-        ArtifactioCraftingRecipes.register();
+        ArtifactioRecipes.register();
         proxy.init(event);
 
     }
@@ -55,6 +56,7 @@ public class ArtifactioMod
     @EventHandler @SuppressWarnings("unused")
     public void postInit(FMLPostInitializationEvent event)
     {
+        new CommonEvents();
         proxy.postInit(event);
     }
 

@@ -75,6 +75,8 @@ public class ItemToolCompendium extends Item
         return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
     }
 
+
+
     @Override
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
     {
@@ -98,7 +100,7 @@ public class ItemToolCompendium extends Item
                         ItemStack held = player.getHeldItemMainhand();
                         ItemStack invItem;
                         float blockRes;
-                        if (held == null) blockRes = 1f;
+                        if (held == null) blockRes = 1f; // TODO : Change in 1.11
                         else blockRes = held.getStrVsBlock(state);
 
                         float str;
